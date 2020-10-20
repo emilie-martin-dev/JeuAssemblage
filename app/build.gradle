@@ -1,0 +1,44 @@
+allprojects {
+	apply plugin : 'java'
+	
+	repositories {
+		jcenter()
+	}
+	
+	dependencies {
+		testImplementation 'junit:junit:4.13'
+	}
+}
+
+project(':jeuAssemblage') {
+	apply plugin : 'application'
+
+	jar {
+		enabled = true
+	}
+
+	dependencies {
+		implementation project(':piecesPuzzle')
+	}
+	
+	application {
+		mainClassName = 'jeu.Main'
+	}
+
+	jar {
+		manifest {
+			attributes(
+				'Main-Class': mainClassName
+			)
+		}
+	}
+
+	run {
+		standardInput = System.in
+	}
+}
+
+project(':piecesPuzzle') {
+	apply plugin : 'java-library'
+}
+
