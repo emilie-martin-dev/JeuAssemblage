@@ -1,14 +1,14 @@
 package jeu;
 
-import piece_puzzle.PlateauPuzzle;
-import piece_puzzle.pieces.PiecePuzzle;
-import piece_puzzle.pieces.PieceT;
+import piece_puzzle.model.Plateau;
+import piece_puzzle.model.AbstractPiece;
+import piece_puzzle.model.PieceT;
 
 
 public class Main {
 	
 	public static void main(String[] args) {
-		PlateauPuzzle map = new PlateauPuzzle(30, 30);
+		Plateau map = new Plateau(30, 30);
 		map.addPiece(new PieceT(3, 4, 0, 0));
 		map.addPiece(new PieceT(3, 4, 0, 2));
 		map.addPiece(new PieceT(3, 4, 0, 10));
@@ -16,7 +16,7 @@ public class Main {
 		
 		System.out.println(map);
 		
-		PiecePuzzle piece = new PieceT(7, 5);
+		AbstractPiece piece = new PieceT(7, 5);
 				
 		System.out.println(piece);
 		System.out.println("");

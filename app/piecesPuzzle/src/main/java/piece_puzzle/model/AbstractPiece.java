@@ -1,8 +1,8 @@
-package piece_puzzle.pieces;
+package piece_puzzle.model;
 
-import piece_puzzle.Position;
+import piece_puzzle.utils.Position;
 
-public abstract class PiecePuzzle {
+public abstract class AbstractPiece implements IEnsembleBlocs {
 	
 	private Position m_position;
 	private int m_rotationCount;
@@ -11,11 +11,11 @@ public abstract class PiecePuzzle {
 	
 	private boolean[] m_cells;
 
-	public PiecePuzzle(int w, int h) {
+	public AbstractPiece(int w, int h) {
 		this(w, h, 0, 0);
 	}
 	
-	public PiecePuzzle(int w, int h, int x, int y) {
+	public AbstractPiece(int w, int h, int x, int y) {
 		m_rotationCount = 0;
 		
 		m_cells = generatePiece(w, h);		
@@ -60,6 +60,17 @@ public abstract class PiecePuzzle {
 		
 		if(m_rotationCount >= 4)
 			m_rotationCount %= 4;
+	}
+	
+	public void unrotate() {
+		m_rotationCount--;
+		
+		if(m_rotationCount < 0)
+			m_rotationCount = 3;
+	}
+	
+	public void move(int xOffset, int yOffset) {
+		m_position.move(xOffset, yOffset);
 	}
 	
 	public int getWidth() {

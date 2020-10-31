@@ -1,4 +1,4 @@
-package piece_puzzle;
+package piece_puzzle.utils;
 
 public class Position {
 	
@@ -6,10 +6,15 @@ public class Position {
 	private int m_y;
 
 	public Position(int x, int y) {
-		this.m_x = x;
-		this.m_y = y;
+		m_x = x;
+		m_y = y;
 	}	
 
+	public void move(int xOffset, int yOffset) {
+		m_x += xOffset;
+		m_y += yOffset;
+	}
+	
 	public int getX() {
 		return m_x;
 	}

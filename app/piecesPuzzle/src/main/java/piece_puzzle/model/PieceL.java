@@ -1,6 +1,6 @@
-package piece_puzzle.pieces;
+package piece_puzzle.model;
 
-public class PieceL extends PiecePuzzle {
+public class PieceL extends AbstractPiece {
 	
 	public PieceL(int w, int h) {
 		super(w, h);
