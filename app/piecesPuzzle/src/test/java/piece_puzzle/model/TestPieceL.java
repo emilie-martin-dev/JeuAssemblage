@@ -10,7 +10,25 @@ public class TestPieceL {
 	
 	@Test
 	public void generate() {
-		Assert.assertTrue(true);
+		int h = 5;
+		int w = 3;
+		PieceL pieceL = new PieceL(w, h);
+		
+		// Vérifie la barre de gauche du L
+		for(int y = 0 ; y < h-1 ; y++) {
+			for(int x = 0 ; x < w ; x++) {
+				if(x == 0)
+					Assert.assertTrue(pieceL.isCaseFilledAt(x, y));
+				else
+					Assert.assertFalse(pieceL.isCaseFilledAt(x, y));
+			}	
+		}
+		
+		// Vérifie la barre hozizontale en bas 
+		for(int x = 0 ; x < w ; x++) {
+			Assert.assertTrue(pieceL.isCaseFilledAt(x, h-1));
+		}
+		
 	}
 	
 }
