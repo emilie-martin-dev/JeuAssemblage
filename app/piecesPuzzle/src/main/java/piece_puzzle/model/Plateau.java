@@ -53,6 +53,27 @@ public class Plateau implements IEnsembleBlocs {
 		return false;
 	}
 	
+	public AbstractPiece getPieceAt(int x, int y) {
+		if(x < 0 || x >= m_width ||
+			y < 0 || y >= m_height) {
+			return null;
+		}
+		
+		for(AbstractPiece p : m_pieces) {
+			if(p.getPosition().getX() <= x 
+					&& p.getPosition().getX() + p.getWidth() >= x
+					&& p.getPosition().getY() <= y
+					&& p.getPosition().getY() + p.getHeight() >= y) {
+				if(p.isCaseFilledAt(x - p.getPosition().getX(),
+						y - p.getPosition().getY())) {
+					return p;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
 	public List<AbstractPiece> getPieces() {
 		return m_pieces;
 	}

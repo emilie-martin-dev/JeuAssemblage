@@ -2,20 +2,35 @@ package jeu.window;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import javax.swing.JPanel;
+import piece_puzzle.actions.ActionPieceMove;
+import piece_puzzle.actions.ActionPieceRotate;
 import piece_puzzle.model.AbstractPiece;
 import piece_puzzle.model.PieceL;
+import piece_puzzle.model.PieceT;
 import piece_puzzle.model.Plateau;
 
-public class GameCanvas extends JPanel {
+public class GameCanvas extends JPanel implements MouseListener, MouseMotionListener {
+	
+	private static final Color[] COLORS = {Color.BLUE, Color.GREEN, Color.PINK, Color.ORANGE};
 	
 	private Plateau m_plateau;
-	private static final Color[] COLORS = {Color.BLUE, Color.GREEN, Color.PINK, Color.orange};
+	private AbstractPiece m_selectedPiece;
+
+	private int offsetX;
+	private int offsetY;
 	
 	public GameCanvas(Plateau plateau) {
 		m_plateau = plateau;
 		
 		m_plateau.addPiece(new PieceL(3, 5));
+		m_plateau.addPiece(new PieceT(5, 3, 5, 5));
+		
+		this.addMouseListener(this);
+		this.addMouseMotionListener(this);
 	}
 	
 	/**
@@ -66,11 +81,81 @@ public class GameCanvas extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponents(g);
 		
+		g.setColor(Color.WHITE);
+		g.fillRect(0, 0, getWidth(), getHeight());
+		
 		drawPieces(g);
 		
 		drawGrid(g);
 	}
 
+	
+	@Override
+	public void mouseClicked(MouseEvent me) {
+		float cellSize = getCellSize();
+		
+		int caseX = (int) (me.getX() / cellSize);
+		int caseY = (int) (me.getY() / cellSize);
+		
+		AbstractPiece piece = m_plateau.getPieceAt(caseX, caseY);
+		if(piece != null) {
+			ActionPieceRotate rotate = new ActionPieceRotate(m_plateau, piece);
+			if(rotate.isValid())
+				rotate.apply();
+
+			updateUI();
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent me) {
+		float cellSize = getCellSize();
+		
+		int caseX = (int) (me.getX() / cellSize);
+		int caseY = (int) (me.getY() / cellSize);
+		
+		m_selectedPiece = m_plateau.getPieceAt(caseX, caseY);
+		
+		offsetX = caseX - m_selectedPiece.getPosition().getX();
+		offsetY = caseY - m_selectedPiece.getPosition().getY();
+	}	
+
+	@Override
+	public void mouseDragged(MouseEvent me) {
+		float cellSize = getCellSize();
+
+		int caseX = (int) (me.getX() / cellSize);
+		int caseY = (int) (me.getY() / cellSize);
+
+		int xOffset = caseX - m_selectedPiece.getPosition().getX() - offsetX;
+		int yOffset = caseY - m_selectedPiece.getPosition().getY() - offsetY;
+
+		ActionPieceMove action = new ActionPieceMove(m_plateau, m_selectedPiece, xOffset, yOffset);
+		if(action.isValid()) {
+			action.apply();
+			updateUI();
+		}
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent me) {	
+		
+		
+	}
+	
+	@Override
+	public void mouseReleased(MouseEvent me) {
+		m_selectedPiece = null;
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent me) {
+	}
+
+	@Override
+	public void mouseExited(MouseEvent me) {
+	}
+	
 	public Plateau getPlateau() {
 		return m_plateau;
 	}
