@@ -1,12 +1,10 @@
-package jeu.window;
+package assemblage.window;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.*;
 
-import jeu.game.score.IScoreCalculator;
-import jeu.game.score.ScoreCalculator;
+import assemblage.game.score.IScoreCalculator;
+import assemblage.game.score.ScoreCalculator;
 import piece_puzzle.model.PieceL;
 import piece_puzzle.model.PieceT;
 import piece_puzzle.model.Plateau;

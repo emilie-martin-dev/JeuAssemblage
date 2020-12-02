@@ -1,4 +1,4 @@
-package jeu.game;
+package assemblage.game;
 
 public class GameRule {
 

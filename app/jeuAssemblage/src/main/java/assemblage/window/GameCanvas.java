@@ -1,4 +1,4 @@
-package jeu.window;
+package assemblage.window;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -9,8 +9,6 @@ import javax.swing.JPanel;
 import piece_puzzle.actions.ActionPieceMove;
 import piece_puzzle.actions.ActionPieceRotate;
 import piece_puzzle.model.AbstractPiece;
-import piece_puzzle.model.PieceL;
-import piece_puzzle.model.PieceT;
 import piece_puzzle.model.Plateau;
 
 public class GameCanvas extends JPanel implements MouseListener, MouseMotionListener {

@@ -1,4 +1,4 @@
-package jeu.game.score;
+package assemblage.game.score;
 
 import piece_puzzle.model.Plateau;
 

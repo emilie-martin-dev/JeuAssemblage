@@ -1,6 +1,6 @@
-package jeu;
+package assemblage;
 
-import jeu.window.MainWindow;
+import assemblage.window.MainWindow;
 
 public class Main {
 	
