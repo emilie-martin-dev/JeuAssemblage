@@ -115,13 +115,17 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 		int caseY = (int) (me.getY() / cellSize);
 		
 		m_selectedPiece = m_plateau.getPieceAt(caseX, caseY);
-		
-		offsetX = caseX - m_selectedPiece.getPosition().getX();
-		offsetY = caseY - m_selectedPiece.getPosition().getY();
+		if(m_selectedPiece != null) {
+			offsetX = caseX - m_selectedPiece.getPosition().getX();
+			offsetY = caseY - m_selectedPiece.getPosition().getY();
+		}
 	}	
 
 	@Override
 	public void mouseDragged(MouseEvent me) {
+		if(m_selectedPiece == null)
+			return;
+
 		float cellSize = getCellSize();
 
 		int caseX = (int) (me.getX() / cellSize);
