@@ -1,18 +1,25 @@
 package jeu.window;
 
 import java.awt.BorderLayout;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.*;
+
+import jeu.game.score.IScoreCalculator;
+import jeu.game.score.ScoreCalculator;
+import piece_puzzle.model.PieceL;
+import piece_puzzle.model.PieceT;
 import piece_puzzle.model.Plateau;
 
 public class MainWindow extends JFrame {
 	
 	private GameCanvas m_canvas;
+
+	private Plateau m_plateau;
 	
 	public MainWindow() {
-		m_canvas = new GameCanvas(new Plateau(20, 20));
+		newGame();
+		m_canvas = new GameCanvas(m_plateau);
 		
 		this.setTitle("Assemblage");
 		this.setLayout(new BorderLayout());
@@ -32,27 +39,53 @@ public class MainWindow extends JFrame {
 	 * Création de la barre de navigation
 	 */
 	private void createMenuBar() {
-		//Création de la barre de navigation
 		JMenuBar menuBar = new JMenuBar();
 
-		//Création des catégories de la barre de navigation
-		JMenu menuFichier = new JMenu("Jeu");
-		JMenu menuAffichage = new JMenu("Mode");
+		JMenu menuPartie = new JMenu("Partie");
+		JMenu menuJeu = new JMenu("Jeu");
 
-		//Création de la sous-catégorie "nouvelle partie" de "jeu"
-		JMenuItem itemNewGame = new JMenuItem("Nouvelle partie");
-		menuFichier.add(itemNewGame);
+		JMenuItem itemNouvellePartie = new JMenuItem("Nouvelle partie");
+		itemNouvellePartie.addActionListener(actionEvent -> {
+			newGame();
+			m_canvas.setPlateau(m_plateau);
+		});
+		JMenuItem itemOuvrir = new JMenuItem("Ouvrir");
+		itemOuvrir.addActionListener(actionEvent -> {
 
-		//Création de la sous-catégorie "Changer l'image" de "Mode"
-		JMenuItem itemChangerImage = new JMenuItem("Changer l'image");
-		menuAffichage.add(itemChangerImage);
-		//Evenement de l'item "mode chiffres"
+		});
+		JMenuItem itemSauvegarder = new JMenuItem("Sauvegarder");
+		itemSauvegarder.addActionListener(actionEvent -> {
+			newGame();
+			m_canvas.setPlateau(m_plateau);
+		});
+		menuPartie.add(itemNouvellePartie);
+		menuPartie.add(itemOuvrir);
+		menuPartie.add(itemSauvegarder);
 
-		//Ajout des catégories à la barre de navigation
-		menuBar.add(menuFichier);
-		menuBar.add(menuAffichage);
+		JMenuItem itemNouvelleConfig = new JMenuItem("Nouvelle configuration");
+		JMenuItem itemCalculerScore = new JMenuItem("Calculer le score");
+		itemCalculerScore.addActionListener(actionEvent -> {
+			IScoreCalculator scoreCalculator = new ScoreCalculator();
+			int score = scoreCalculator.calculate(m_plateau);
+			int scoreMax = scoreCalculator.getScoreMax(m_plateau);
+
+			JOptionPane.showMessageDialog(this, "Votre score est de " + score + " / " + scoreMax, "Votre score", JOptionPane.INFORMATION_MESSAGE);
+		});
+
+		menuJeu.add(itemNouvelleConfig);
+		menuJeu.add(itemCalculerScore);
+
+		menuBar.add(menuPartie);
+		menuBar.add(menuJeu);
 
 		this.setJMenuBar(menuBar);
+	}
+
+	public void newGame() {
+		m_plateau = new Plateau(20, 20);
+
+		m_plateau.addPiece(new PieceL(3, 5));
+		m_plateau.addPiece(new PieceT(5, 3, 5, 5));
 	}
 	
 }

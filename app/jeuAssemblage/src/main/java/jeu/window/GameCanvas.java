@@ -24,10 +24,7 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 	private int offsetY;
 	
 	public GameCanvas(Plateau plateau) {
-		m_plateau = plateau;
-		
-		m_plateau.addPiece(new PieceL(3, 5));
-		m_plateau.addPiece(new PieceT(5, 3, 5, 5));
+		setPlateau(plateau);
 		
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
@@ -89,7 +86,11 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 		drawGrid(g);
 	}
 
-	
+	public void redraw() {
+		revalidate();
+		repaint();
+	}
+
 	@Override
 	public void mouseClicked(MouseEvent me) {
 		float cellSize = getCellSize();
@@ -103,7 +104,7 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 			if(rotate.isValid())
 				rotate.apply();
 
-			updateUI();
+			redraw();
 		}
 	}
 
@@ -137,14 +138,12 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 		ActionPieceMove action = new ActionPieceMove(m_plateau, m_selectedPiece, xOffset, yOffset);
 		if(action.isValid()) {
 			action.apply();
-			updateUI();
+			redraw();
 		}
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent me) {	
-		
-		
+	public void mouseMoved(MouseEvent me) {
 	}
 	
 	@Override
@@ -166,6 +165,7 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 
 	public void setPlateau(Plateau plateau) {
 		m_plateau = plateau;
+		redraw();
 	}
 	
 }
