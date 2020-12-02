@@ -1,23 +1,30 @@
 package assemblage.window;
 
 import java.awt.BorderLayout;
+import java.io.File;
 import javax.swing.*;
 
+import assemblage.game.GameState;
 import assemblage.game.score.IScoreCalculator;
 import assemblage.game.score.ScoreCalculator;
+import assemblage.io.IGameIO;
+import assemblage.io.gson.GameIOGson;
 import piece_puzzle.model.PieceL;
 import piece_puzzle.model.PieceT;
 import piece_puzzle.model.Plateau;
 
 public class MainWindow extends JFrame {
-	
+
+	private IGameIO m_gameIO;
+
 	private GameCanvas m_canvas;
 
 	private Plateau m_plateau;
 	
 	public MainWindow() {
+		m_gameIO = new GameIOGson();
+		m_canvas = new GameCanvas(null);
 		newGame();
-		m_canvas = new GameCanvas(m_plateau);
 		
 		this.setTitle("Assemblage");
 		this.setLayout(new BorderLayout());
@@ -49,12 +56,11 @@ public class MainWindow extends JFrame {
 		});
 		JMenuItem itemOuvrir = new JMenuItem("Ouvrir");
 		itemOuvrir.addActionListener(actionEvent -> {
-
+			openGame();
 		});
 		JMenuItem itemSauvegarder = new JMenuItem("Sauvegarder");
 		itemSauvegarder.addActionListener(actionEvent -> {
-			newGame();
-			m_canvas.setPlateau(m_plateau);
+			saveGame();
 		});
 		menuPartie.add(itemNouvellePartie);
 		menuPartie.add(itemOuvrir);
@@ -84,6 +90,43 @@ public class MainWindow extends JFrame {
 
 		m_plateau.addPiece(new PieceL(3, 5));
 		m_plateau.addPiece(new PieceT(5, 3, 5, 5));
+
+		setPlateau(m_plateau);
 	}
-	
+
+	public void openGame() {
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		chooser.showOpenDialog(this);
+
+		File selectedFile = chooser.getSelectedFile();
+		if(selectedFile == null)
+			return;
+
+		GameState save = m_gameIO.loadGameState(selectedFile.getPath());
+
+		setPlateau(save.getPlateau());
+	}
+
+	public void saveGame() {
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		chooser.showSaveDialog(this);
+
+		File selectedFile = chooser.getSelectedFile();
+		if(selectedFile == null)
+			return;
+
+		GameState gameState = new GameState();
+		gameState.setPlateau(m_plateau);
+
+		m_gameIO.saveGameState(gameState, selectedFile.getPath());
+	}
+
+	public void setPlateau(Plateau plateau) {
+		m_plateau = plateau;
+
+		m_canvas.setPlateau(plateau);
+	}
+
 }

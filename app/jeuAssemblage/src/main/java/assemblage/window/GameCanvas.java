@@ -78,8 +78,9 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 		
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, getWidth(), getHeight());
-		
-		drawPieces(g);
+
+		if(m_plateau != null)
+			drawPieces(g);
 		
 		drawGrid(g);
 	}
