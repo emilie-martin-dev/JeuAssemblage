@@ -17,14 +17,14 @@ public class ActionPieceRotate implements IAction{
 	
 	@Override
 	public boolean isValid() {
-		m_plateau.removePiece(m_piece);
+		int index = m_plateau.removePiece(m_piece);
 		m_piece.rotate();
 		
 		IValidator validator = new ActionPiecePlaceValidator(m_plateau, m_piece);
 		boolean isValid = validator.isValid();
 		
 		m_piece.unrotate();
-		m_plateau.addPiece(m_piece);
+		m_plateau.addPiece(m_piece, index);
 
 		return isValid;
 	}

@@ -9,10 +9,12 @@ public class ActionPiecePlace implements IAction {
 
 	private AbstractPiece m_piece;
 	private Plateau m_plateau;
+	private int m_index;
 
-	public ActionPiecePlace(Plateau plateau, AbstractPiece piece) {
+	public ActionPiecePlace(Plateau plateau, AbstractPiece piece, int index) {
 		m_piece = piece;
 		m_plateau = plateau;
+		m_index = index;
 	}
 	
 	@Override
@@ -24,7 +26,7 @@ public class ActionPiecePlace implements IAction {
 
 	@Override
 	public void apply() {
-		m_plateau.getPieces().add(m_piece);
+		m_plateau.getPieces().add(m_index, m_piece);
 	}
 	
 }

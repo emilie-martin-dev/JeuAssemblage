@@ -22,14 +22,20 @@ public class Plateau implements IEnsembleBlocs {
 	}
 
 	public void addPiece(AbstractPiece p) {
-		ActionPiecePlace placement = new ActionPiecePlace(this, p);
+		addPiece(p, m_pieces.size());
+	}
+	public void addPiece(AbstractPiece p, int index) {
+		ActionPiecePlace placement = new ActionPiecePlace(this, p, index);
 		
 		if(placement.isValid())
 			placement.apply();
 	}
 	
-	public void removePiece(AbstractPiece p) {
+	public int removePiece(AbstractPiece p) {
+		int index = m_pieces.indexOf(p);
 		m_pieces.remove(p);
+
+		return index;
 	}
 
 	public boolean isCaseFilledAt(int x, int y) {
