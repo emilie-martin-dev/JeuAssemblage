@@ -6,23 +6,26 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import javax.swing.JPanel;
+
+import assemblage.game.GameState;
 import piece_puzzle.actions.ActionPieceMove;
 import piece_puzzle.actions.ActionPieceRotate;
 import piece_puzzle.model.AbstractPiece;
 import piece_puzzle.model.Plateau;
+import piece_puzzle.observer.IPlateauListener;
 
-public class GameCanvas extends JPanel implements MouseListener, MouseMotionListener {
+public class GameCanvas extends JPanel implements MouseListener, MouseMotionListener, IPlateauListener {
 	
 	private static final Color[] COLORS = {Color.BLUE, Color.GREEN, Color.PINK, Color.ORANGE};
 	
-	private Plateau m_plateau;
+	private GameState m_state;
 	private AbstractPiece m_selectedPiece;
 
 	private int offsetX;
 	private int offsetY;
 	
-	public GameCanvas(Plateau plateau) {
-		setPlateau(plateau);
+	public GameCanvas(GameState state) {
+		setGameState(state);
 		
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
@@ -33,7 +36,7 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 	 * @return la taille de la case
 	 */
 	protected float getCellSize() {
-		return Math.min((float)getHeight() / (float)m_plateau.getHeight(), (float)getWidth() / (float)m_plateau.getWidth());
+		return Math.min((float)getHeight() / (float) m_state.getPlateau().getHeight(), (float)getWidth() / (float) m_state.getPlateau().getWidth());
 	}
 
 	/**
@@ -45,11 +48,11 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 
 		float cellSize = getCellSize();
 
-		for(int y = 0 ; y < m_plateau.getHeight() + 1; y++) {
-			for(int x = 0 ; x < m_plateau.getWidth() + 1 ; x++) {
-				g.drawLine((int)(x * cellSize), 0, (int)(x * cellSize), (int)(m_plateau.getHeight() * cellSize));
+		for(int y = 0; y < m_state.getPlateau().getHeight() + 1; y++) {
+			for(int x = 0; x < m_state.getPlateau().getWidth() + 1 ; x++) {
+				g.drawLine((int)(x * cellSize), 0, (int)(x * cellSize), (int)(m_state.getPlateau().getHeight() * cellSize));
 			}
-			g.drawLine(0, (int)(y * cellSize), (int)(m_plateau.getWidth() * cellSize), (int)(y * cellSize));
+			g.drawLine(0, (int)(y * cellSize), (int)(m_state.getPlateau().getWidth() * cellSize), (int)(y * cellSize));
 		}
 	}
 	
@@ -57,7 +60,7 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 		float cellSize = getCellSize();
 		
 		int i = 0;
-		for(AbstractPiece piece : m_plateau.getPieces()) {
+		for(AbstractPiece piece : m_state.getPlateau().getPieces()) {
 			g.setColor(COLORS[i % COLORS.length]);
 			
 			for(int x = 0 ; x < piece.getWidth() ; x++) {
@@ -79,7 +82,7 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, getWidth(), getHeight());
 
-		if(m_plateau != null)
+		if(m_state != null)
 			drawPieces(g);
 		
 		drawGrid(g);
@@ -92,18 +95,19 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 
 	@Override
 	public void mouseClicked(MouseEvent me) {
+		if(isGameFinished())
+			return;
+
 		float cellSize = getCellSize();
 		
 		int caseX = (int) (me.getX() / cellSize);
 		int caseY = (int) (me.getY() / cellSize);
 		
-		AbstractPiece piece = m_plateau.getPieceAt(caseX, caseY);
+		AbstractPiece piece = m_state.getPlateau().getPieceAt(caseX, caseY);
 		if(piece != null) {
-			ActionPieceRotate rotate = new ActionPieceRotate(m_plateau, piece);
+			ActionPieceRotate rotate = new ActionPieceRotate(m_state.getPlateau(), piece);
 			if(rotate.isValid())
 				rotate.apply();
-
-			redraw();
 		}
 	}
 
@@ -114,7 +118,7 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 		int caseX = (int) (me.getX() / cellSize);
 		int caseY = (int) (me.getY() / cellSize);
 		
-		m_selectedPiece = m_plateau.getPieceAt(caseX, caseY);
+		m_selectedPiece = m_state.getPlateau().getPieceAt(caseX, caseY);
 		if(m_selectedPiece != null) {
 			offsetX = caseX - m_selectedPiece.getPosition().getX();
 			offsetY = caseY - m_selectedPiece.getPosition().getY();
@@ -123,6 +127,9 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 
 	@Override
 	public void mouseDragged(MouseEvent me) {
+		if(isGameFinished())
+			return;
+
 		if(m_selectedPiece == null)
 			return;
 
@@ -134,10 +141,9 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 		int xOffset = caseX - m_selectedPiece.getPosition().getX() - offsetX;
 		int yOffset = caseY - m_selectedPiece.getPosition().getY() - offsetY;
 
-		ActionPieceMove action = new ActionPieceMove(m_plateau, m_selectedPiece, xOffset, yOffset);
+		ActionPieceMove action = new ActionPieceMove(m_state.getPlateau(), m_selectedPiece, xOffset, yOffset);
 		if(action.isValid()) {
 			action.apply();
-			redraw();
 		}
 	}
 
@@ -147,6 +153,10 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 	
 	@Override
 	public void mouseReleased(MouseEvent me) {
+		if(m_selectedPiece != null) {
+			m_state.decrementNbCoupsRestants();
+		}
+
 		m_selectedPiece = null;
 	}
 
@@ -157,14 +167,45 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 	@Override
 	public void mouseExited(MouseEvent me) {
 	}
-	
-	public Plateau getPlateau() {
-		return m_plateau;
-	}
 
-	public void setPlateau(Plateau plateau) {
-		m_plateau = plateau;
+	@Override
+	public void pieceMoved(AbstractPiece piece) {
 		redraw();
 	}
+
+	@Override
+	public void pieceRotated(AbstractPiece piece) {
+		redraw();
+	}
+
+	@Override
+	public void pieceAdded(AbstractPiece piece) {
+		redraw();
+	}
+
+	@Override
+	public void pieceRemoved(AbstractPiece piece) {
+		redraw();
+	}
+
+	public void setGameState(GameState state) {
+		if(state == null)
+			return;
+
+		if(m_state != null)
+			m_state.getPlateau().removeListener(this);
+		m_state = state;
+		m_state.getPlateau().addListener(this);
+
+		redraw();
+	}
+
+	public boolean isGameFinished() {
+		return m_state.getNbCoupsRestants() < 0;
+	}
 	
+	public GameState getGameState() {
+		return m_state;
+	}
+
 }

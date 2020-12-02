@@ -21,6 +21,8 @@ public class ActionPieceRemove implements IAction {
 	@Override
 	public void apply() {
 		m_plateau.removePiece(m_piece);
+
+		m_plateau.firePieceRemoved(m_piece);
 	}
 	
 }

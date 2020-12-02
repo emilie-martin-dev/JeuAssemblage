@@ -32,5 +32,7 @@ public class ActionPieceRotate implements IAction{
 	@Override
 	public void apply() {
 		m_piece.rotate();
+
+		m_plateau.firePieceRotated(m_piece);
 	}
 }

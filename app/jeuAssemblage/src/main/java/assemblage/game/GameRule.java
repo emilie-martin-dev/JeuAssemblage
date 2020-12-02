@@ -2,10 +2,10 @@ package assemblage.game;
 
 public class GameRule {
 
-    private int m_nbCoupsMax = 10;
+    private int m_nbCoupsMax;
 
-    public GameRule() {
-
+    public GameRule(int nbCoupsMax) {
+        m_nbCoupsMax = nbCoupsMax;
     }
 
     public int getNbCoupsMax() {

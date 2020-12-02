@@ -27,6 +27,8 @@ public class ActionPiecePlace implements IAction {
 	@Override
 	public void apply() {
 		m_plateau.getPieces().add(m_index, m_piece);
+
+		m_plateau.firePieceAdded(m_piece);
 	}
 	
 }

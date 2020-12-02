@@ -3,9 +3,12 @@ package piece_puzzle.model;
 import java.util.ArrayList;
 import java.util.List;
 import piece_puzzle.actions.ActionPiecePlace;
+import piece_puzzle.observer.IPlateauListener;
 
 public class Plateau implements IEnsembleBlocs {
-	
+
+	private List<IPlateauListener> m_listeners;
+
 	private List<AbstractPiece> m_pieces;
 	private int m_width;
 	private int m_height;
@@ -19,6 +22,7 @@ public class Plateau implements IEnsembleBlocs {
 		m_height = h;
 		
 		m_pieces = new ArrayList<>();
+		m_listeners = new ArrayList<>();
 	}
 
 	public void addPiece(AbstractPiece p) {
@@ -27,10 +31,11 @@ public class Plateau implements IEnsembleBlocs {
 	public void addPiece(AbstractPiece p, int index) {
 		ActionPiecePlace placement = new ActionPiecePlace(this, p, index);
 		
-		if(placement.isValid())
+		if(placement.isValid()) {
 			placement.apply();
+		}
 	}
-	
+
 	public int removePiece(AbstractPiece p) {
 		int index = m_pieces.indexOf(p);
 		m_pieces.remove(p);
@@ -79,13 +84,37 @@ public class Plateau implements IEnsembleBlocs {
 		
 		return null;
 	}
-	
-	public List<AbstractPiece> getPieces() {
-		return m_pieces;
+
+	public void addListener(IPlateauListener listener) {
+		m_listeners.add(listener);
 	}
 
-	public void setPieces(List<AbstractPiece> pieces) {
-		this.m_pieces = pieces;
+	public void removeListener(IPlateauListener listener) {
+		m_listeners.remove(listener);
+	}
+
+	public void firePieceAdded(AbstractPiece p) {
+		for(IPlateauListener l : m_listeners) {
+			l.pieceAdded(p);
+		}
+	}
+
+	public void firePieceRemoved(AbstractPiece p) {
+		for(IPlateauListener l : m_listeners) {
+			l.pieceRemoved(p);
+		}
+	}
+
+	public void firePieceMoved(AbstractPiece p) {
+		for(IPlateauListener l : m_listeners) {
+			l.pieceMoved(p);
+		}
+	}
+
+	public void firePieceRotated(AbstractPiece p) {
+		for(IPlateauListener l : m_listeners) {
+			l.pieceRotated(p);
+		}
 	}
 
 	@Override
@@ -109,7 +138,15 @@ public class Plateau implements IEnsembleBlocs {
 		}
 		
 		return buffer.toString();
-	}	
+	}
+
+	public List<AbstractPiece> getPieces() {
+		return m_pieces;
+	}
+
+	public void setPieces(List<AbstractPiece> pieces) {
+		this.m_pieces = pieces;
+	}
 
 	@Override
 	public int getWidth() {
@@ -120,5 +157,5 @@ public class Plateau implements IEnsembleBlocs {
 	public int getHeight() {
 		return m_height;
 	}
-	
+
 }

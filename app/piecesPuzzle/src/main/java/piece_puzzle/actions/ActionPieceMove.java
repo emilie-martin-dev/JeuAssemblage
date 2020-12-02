@@ -36,5 +36,7 @@ public class ActionPieceMove implements IAction{
 	@Override
 	public void apply() {
 		m_piece.move(m_xOffset, m_yOffset);
+
+		m_plateau.firePieceMoved(m_piece);
 	}
 }

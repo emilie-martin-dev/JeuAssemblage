@@ -3,32 +3,39 @@ package assemblage.window;
 import java.awt.BorderLayout;
 import java.io.File;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
+import assemblage.game.GameRule;
 import assemblage.game.GameState;
 import assemblage.game.score.IScoreCalculator;
 import assemblage.game.score.ScoreCalculator;
 import assemblage.io.IGameIO;
 import assemblage.io.gson.GameIOGson;
+import assemblage.observer.IGameStateListener;
 import piece_puzzle.model.PieceL;
 import piece_puzzle.model.PieceT;
 import piece_puzzle.model.Plateau;
 
-public class MainWindow extends JFrame {
+public class MainWindow extends JFrame implements IGameStateListener {
 
 	private IGameIO m_gameIO;
 
 	private GameCanvas m_canvas;
+	private JLabel m_stateLabel;
 
-	private Plateau m_plateau;
+	private GameState m_gameState;
 	
 	public MainWindow() {
-		m_gameIO = new GameIOGson();
+		m_stateLabel = new JLabel();
+		m_stateLabel.setBorder(new EmptyBorder(16, 16, 16, 16));
 		m_canvas = new GameCanvas(null);
+
 		newGame();
 		
 		this.setTitle("Assemblage");
 		this.setLayout(new BorderLayout());
 		this.getContentPane().add(m_canvas, BorderLayout.CENTER);
+		this.getContentPane().add(m_stateLabel, BorderLayout.EAST);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		createMenuBar();
@@ -38,6 +45,10 @@ public class MainWindow extends JFrame {
 		this.setLocationRelativeTo(null);
 		
 		this.setVisible(true);
+
+		m_gameIO = new GameIOGson();
+
+		updateStateLabel();
 	}
 	
 	/**
@@ -52,7 +63,7 @@ public class MainWindow extends JFrame {
 		JMenuItem itemNouvellePartie = new JMenuItem("Nouvelle partie");
 		itemNouvellePartie.addActionListener(actionEvent -> {
 			newGame();
-			m_canvas.setPlateau(m_plateau);
+			m_canvas.setGameState(m_gameState);
 		});
 		JMenuItem itemOuvrir = new JMenuItem("Ouvrir");
 		itemOuvrir.addActionListener(actionEvent -> {
@@ -70,8 +81,8 @@ public class MainWindow extends JFrame {
 		JMenuItem itemCalculerScore = new JMenuItem("Calculer le score");
 		itemCalculerScore.addActionListener(actionEvent -> {
 			IScoreCalculator scoreCalculator = new ScoreCalculator();
-			int score = scoreCalculator.calculate(m_plateau);
-			int scoreMax = scoreCalculator.getScoreMax(m_plateau);
+			int score = scoreCalculator.calculate(m_gameState.getPlateau());
+			int scoreMax = scoreCalculator.getScoreMax(m_gameState.getPlateau());
 
 			JOptionPane.showMessageDialog(this, "Votre score est de " + score + " / " + scoreMax, "Votre score", JOptionPane.INFORMATION_MESSAGE);
 		});
@@ -86,12 +97,12 @@ public class MainWindow extends JFrame {
 	}
 
 	public void newGame() {
-		m_plateau = new Plateau(20, 20);
+		m_gameState = new GameState(new GameRule(10), new Plateau(20, 20));
 
-		m_plateau.addPiece(new PieceL(3, 5));
-		m_plateau.addPiece(new PieceT(5, 3, 5, 5));
+		m_gameState.getPlateau().addPiece(new PieceL(3, 5));
+		m_gameState.getPlateau().addPiece(new PieceT(5, 3, 5, 5));
 
-		setPlateau(m_plateau);
+		setGameState(m_gameState);
 	}
 
 	public void openGame() {
@@ -105,7 +116,7 @@ public class MainWindow extends JFrame {
 
 		GameState save = m_gameIO.loadGameState(selectedFile.getPath());
 
-		setPlateau(save.getPlateau());
+		setGameState(save);
 	}
 
 	public void saveGame() {
@@ -117,16 +128,24 @@ public class MainWindow extends JFrame {
 		if(selectedFile == null)
 			return;
 
-		GameState gameState = new GameState();
-		gameState.setPlateau(m_plateau);
-
-		m_gameIO.saveGameState(gameState, selectedFile.getPath());
+		m_gameIO.saveGameState(m_gameState, selectedFile.getPath());
 	}
 
-	public void setPlateau(Plateau plateau) {
-		m_plateau = plateau;
-
-		m_canvas.setPlateau(plateau);
+	public void updateStateLabel() {
+		m_stateLabel.setText("Coups restants : " + m_gameState.getNbCoupsRestants() + "\n");
 	}
 
+	public void setGameState(GameState state) {
+		if(m_gameState != null)
+			m_gameState.removeListener(this);
+		m_gameState = state;
+		m_gameState.addListener(this);
+
+		m_canvas.setGameState(state);
+	}
+
+	@Override
+	public void nbCoupsRestantsChanged(int nbCoupsRestants) {
+		updateStateLabel();
+	}
 }
