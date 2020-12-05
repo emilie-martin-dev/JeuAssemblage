@@ -142,6 +142,8 @@ public class MainWindow extends JFrame implements IGameStateListener {
 		m_gameState.addListener(this);
 
 		m_canvas.setGameState(state);
+
+		updateStateLabel();
 	}
 
 	@Override

@@ -102,27 +102,19 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 		
 		int caseX = (int) (me.getX() / cellSize);
 		int caseY = (int) (me.getY() / cellSize);
-		
+
 		AbstractPiece piece = m_state.getPlateau().getPieceAt(caseX, caseY);
 		if(piece != null) {
 			ActionPieceRotate rotate = new ActionPieceRotate(m_state.getPlateau(), piece);
-			if(rotate.isValid())
+			if(rotate.isValid()) {
 				rotate.apply();
+			}
 		}
 	}
 
 	@Override
 	public void mousePressed(MouseEvent me) {
-		float cellSize = getCellSize();
-		
-		int caseX = (int) (me.getX() / cellSize);
-		int caseY = (int) (me.getY() / cellSize);
-		
-		m_selectedPiece = m_state.getPlateau().getPieceAt(caseX, caseY);
-		if(m_selectedPiece != null) {
-			offsetX = caseX - m_selectedPiece.getPosition().getX();
-			offsetY = caseY - m_selectedPiece.getPosition().getY();
-		}
+
 	}	
 
 	@Override
@@ -130,13 +122,19 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 		if(isGameFinished())
 			return;
 
-		if(m_selectedPiece == null)
-			return;
-
 		float cellSize = getCellSize();
-
 		int caseX = (int) (me.getX() / cellSize);
 		int caseY = (int) (me.getY() / cellSize);
+
+		if(m_selectedPiece == null) {
+			m_selectedPiece = m_state.getPlateau().getPieceAt(caseX, caseY);
+			if(m_selectedPiece != null) {
+				offsetX = caseX - m_selectedPiece.getPosition().getX();
+				offsetY = caseY - m_selectedPiece.getPosition().getY();
+			} else {
+				return;
+			}
+		}
 
 		int xOffset = caseX - m_selectedPiece.getPosition().getX() - offsetX;
 		int yOffset = caseY - m_selectedPiece.getPosition().getY() - offsetY;
@@ -153,7 +151,7 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 	
 	@Override
 	public void mouseReleased(MouseEvent me) {
-		if(m_selectedPiece != null) {
+		if(m_selectedPiece != null && !isGameFinished()) {
 			m_state.decrementNbCoupsRestants();
 		}
 
@@ -176,6 +174,8 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 	@Override
 	public void pieceRotated(AbstractPiece piece) {
 		redraw();
+
+		m_state.decrementNbCoupsRestants();
 	}
 
 	@Override
@@ -201,7 +201,7 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 	}
 
 	public boolean isGameFinished() {
-		return m_state.getNbCoupsRestants() < 0;
+		return m_state.getNbCoupsRestants() <= 0;
 	}
 	
 	public GameState getGameState() {
