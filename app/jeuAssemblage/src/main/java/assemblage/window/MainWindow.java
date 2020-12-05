@@ -77,7 +77,11 @@ public class MainWindow extends JFrame implements IGameStateListener {
 		menuPartie.add(itemOuvrir);
 		menuPartie.add(itemSauvegarder);
 
-		JMenuItem itemNouvelleConfig = new JMenuItem("Nouvelle configuration");
+		JMenuItem itemNouvelleConfig = new JMenuItem("Reset de la grille");
+		itemNouvelleConfig.addActionListener(actionEvent -> {
+			m_gameState.reset();
+		});
+
 		JMenuItem itemCalculerScore = new JMenuItem("Calculer le score");
 		itemCalculerScore.addActionListener(actionEvent -> {
 			IScoreCalculator scoreCalculator = new ScoreCalculator();
@@ -97,10 +101,13 @@ public class MainWindow extends JFrame implements IGameStateListener {
 	}
 
 	public void newGame() {
-		m_gameState = new GameState(new GameRule(10), new Plateau(20, 20));
+		Plateau p = new Plateau(20, 20);
 
-		m_gameState.getPlateau().addPiece(new PieceL(3, 5));
-		m_gameState.getPlateau().addPiece(new PieceT(5, 3, 5, 5));
+		p.addPiece(new PieceL(3, 5));
+		p.addPiece(new PieceT(5, 3, 5, 5));
+
+		m_gameState = new GameState(new GameRule(10), p);
+
 
 		setGameState(m_gameState);
 	}
@@ -143,6 +150,11 @@ public class MainWindow extends JFrame implements IGameStateListener {
 
 		m_canvas.setGameState(state);
 
+		updateStateLabel();
+	}
+
+	@Override
+	public void stateReset() {
 		updateStateLabel();
 	}
 

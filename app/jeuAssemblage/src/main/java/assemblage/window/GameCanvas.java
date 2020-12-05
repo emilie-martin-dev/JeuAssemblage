@@ -8,13 +8,14 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JPanel;
 
 import assemblage.game.GameState;
+import assemblage.observer.IGameStateListener;
 import piece_puzzle.actions.ActionPieceMove;
 import piece_puzzle.actions.ActionPieceRotate;
 import piece_puzzle.model.AbstractPiece;
 import piece_puzzle.model.Plateau;
 import piece_puzzle.observer.IPlateauListener;
 
-public class GameCanvas extends JPanel implements MouseListener, MouseMotionListener, IPlateauListener {
+public class GameCanvas extends JPanel implements MouseListener, MouseMotionListener, IPlateauListener, IGameStateListener {
 	
 	private static final Color[] COLORS = {Color.BLUE, Color.GREEN, Color.PINK, Color.ORANGE};
 	
@@ -58,7 +59,7 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 	
 	protected void drawPieces(Graphics g) {
 		float cellSize = getCellSize();
-		
+
 		int i = 0;
 		for(AbstractPiece piece : m_state.getPlateau().getPieces()) {
 			g.setColor(COLORS[i % COLORS.length]);
@@ -192,10 +193,13 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 		if(state == null)
 			return;
 
-		if(m_state != null)
+		if(m_state != null) {
 			m_state.getPlateau().removeListener(this);
+			m_state.removeListener(this);
+		}
 		m_state = state;
 		m_state.getPlateau().addListener(this);
+		m_state.addListener(this);
 
 		redraw();
 	}
@@ -203,7 +207,17 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 	public boolean isGameFinished() {
 		return m_state.getNbCoupsRestants() <= 0;
 	}
-	
+
+	@Override
+	public void stateReset() {
+		redraw();
+	}
+
+	@Override
+	public void nbCoupsRestantsChanged(int nbCoupsRestants) {
+
+	}
+
 	public GameState getGameState() {
 		return m_state;
 	}

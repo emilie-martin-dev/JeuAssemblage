@@ -1,6 +1,10 @@
 package assemblage.game;
 
+import assemblage.io.gson.serializer.CustomAdapter;
 import assemblage.observer.IGameStateListener;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import piece_puzzle.model.AbstractPiece;
 import piece_puzzle.model.Plateau;
 
 import java.util.ArrayList;
@@ -12,16 +16,38 @@ public class GameState {
 
     private GameRule m_rules;
     private Plateau m_plateau;
+    private Plateau m_plateauDepart;
 
     private int m_nbCoupsRestants;
 
     public GameState(GameRule rules, Plateau plateau) {
         m_rules = rules;
-        m_plateau = plateau;
+        m_plateauDepart = plateau;
+        m_plateau = copyPlateauDepart();
 
         m_nbCoupsRestants = rules.getNbCoupsMax();
 
         m_listeners = new ArrayList<>();
+    }
+
+
+    public Plateau copyPlateauDepart() {
+        // Pas efficace DUTOUT! J'utilise cette méthode afin de gagner de temps
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(AbstractPiece.class, new CustomAdapter<>());
+        builder.setPrettyPrinting();
+
+        Gson gson = builder.create();
+        String json = gson.toJson(m_plateauDepart);
+        return gson.fromJson(json, Plateau.class);
+    }
+
+    public void reset() {
+        m_nbCoupsRestants = m_rules.getNbCoupsMax();
+
+        m_plateau = copyPlateauDepart();
+
+        fireGameReset();
     }
 
     public void decrementNbCoupsRestants() {
@@ -41,6 +67,12 @@ public class GameState {
     public void fireNbCoupsRestantsChanged() {
         for(IGameStateListener l : m_listeners) {
             l.nbCoupsRestantsChanged(m_nbCoupsRestants);
+        }
+    }
+
+    public void fireGameReset() {
+        for(IGameStateListener l : m_listeners) {
+            l.stateReset();
         }
     }
 
