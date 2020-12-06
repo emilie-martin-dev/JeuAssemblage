@@ -16,7 +16,7 @@ import piece_puzzle.observer.IPlateauListener;
 
 public class GameCanvas extends JPanel implements MouseListener, MouseMotionListener, IPlateauListener, IGameStateListener {
 	
-	private static final Color[] COLORS = {Color.BLUE, Color.GREEN, Color.PINK, Color.ORANGE};
+	private static final Color[] COLORS = {Color.LIGHT_GRAY, Color.RED, Color.PINK, Color.ORANGE, Color.GRAY, Color.YELLOW, Color.GREEN, Color.MAGENTA, Color.DARK_GRAY, Color.CYAN, Color.BLUE};
 	
 	private GameState m_state;
 	private AbstractPiece m_selectedPiece;
