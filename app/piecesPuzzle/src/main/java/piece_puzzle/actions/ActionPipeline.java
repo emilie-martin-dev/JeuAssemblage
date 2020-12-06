@@ -4,8 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Suite d'action à effectuer
+ */
 public class ActionPipeline implements IAction {
 
+	/**
+	 * La liste d'action
+	 */
 	private List<IAction> m_actions;
 
 	public ActionPipeline(IAction ...actions) {
@@ -21,7 +27,6 @@ public class ActionPipeline implements IAction {
 		}
 		
 		return true;
-	
 	}
 
 	@Override
@@ -30,7 +35,11 @@ public class ActionPipeline implements IAction {
 			a.apply();
 		}
 	}
-	
+
+	/**
+	 * Ajoute une action
+	 * @param action L'action a ajouter
+	 */
 	public void addAction(IAction action) {
 		m_actions.add(action);
 	}

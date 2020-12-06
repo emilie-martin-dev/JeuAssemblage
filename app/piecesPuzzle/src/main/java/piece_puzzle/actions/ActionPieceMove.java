@@ -1,15 +1,28 @@
 package piece_puzzle.actions;
 
-import piece_puzzle.actions.validator.ActionPiecePlaceValidator;
-import piece_puzzle.actions.validator.IValidator;
 import piece_puzzle.model.AbstractPiece;
 import piece_puzzle.model.Plateau;
 
+/**
+ * Action pour déplacer une pièce
+ */
 public class ActionPieceMove implements IAction{
 
+	/**
+	 * La pièce à déplacer
+	 */
 	private AbstractPiece m_piece;
+	/**
+	 * Le plateau qui contient la pièce
+	 */
 	private Plateau m_plateau;
+	/**
+	 * Le déplacement x
+	 */
 	private int m_xOffset;
+	/**
+	 * Le déplacement y
+	 */
 	private int m_yOffset;
 
 	public ActionPieceMove(Plateau plateau, AbstractPiece piece, int xOffset, int yOffset) {
@@ -23,9 +36,9 @@ public class ActionPieceMove implements IAction{
 	public boolean isValid() {
 		int index = m_plateau.removePiece(m_piece);
 		m_piece.move(m_xOffset, m_yOffset);
-		
-		IValidator validator = new ActionPiecePlaceValidator(m_plateau, m_piece);
-		boolean isValid = validator.isValid();
+
+		ActionPiecePlace placer = new ActionPiecePlace(m_plateau, m_piece);
+		boolean isValid = placer.isValid();
 		
 		m_piece.move(-m_xOffset, -m_yOffset);
 		m_plateau.addPiece(m_piece, index);

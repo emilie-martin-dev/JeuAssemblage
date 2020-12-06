@@ -3,9 +3,18 @@ package piece_puzzle.actions;
 import piece_puzzle.model.AbstractPiece;
 import piece_puzzle.model.Plateau;
 
+/**
+ * Supprime une pièce du plateau
+ */
 public class ActionPieceRemove implements IAction {
 
+	/**
+	 * La pièce a placer
+	 */
 	private AbstractPiece m_piece;
+	/**
+	 * Le plateau sur lequel ajouter la pièce
+	 */
 	private Plateau m_plateau;
 
 	public ActionPieceRemove(Plateau plateau, AbstractPiece piece) {

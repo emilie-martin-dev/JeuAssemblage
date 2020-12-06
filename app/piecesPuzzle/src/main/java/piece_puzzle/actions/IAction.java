@@ -1,9 +1,19 @@
 package piece_puzzle.actions;
 
-import piece_puzzle.actions.validator.IValidator;
+/**
+ * Définit une action
+ */
+public interface IAction {
 
-public interface IAction extends IValidator {
-	
+	/**
+	 * Applique l'action
+	 */
 	public void apply();
+
+	/**
+	 * Vérifie si l'action est valide
+	 * @return Retourne si l'action est valide
+	 */
+	public boolean isValid();
 	
 }
