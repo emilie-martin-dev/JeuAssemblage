@@ -3,6 +3,8 @@ package assemblage.io.gson;
 import assemblage.game.GameState;
 import assemblage.io.IGameIO;
 import assemblage.io.gson.serializer.CustomAdapter;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import piece_puzzle.model.AbstractPiece;
@@ -20,6 +22,29 @@ public class GameIOGson implements IGameIO {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(AbstractPiece.class, new CustomAdapter<>());
         builder.setPrettyPrinting();
+        builder.addSerializationExclusionStrategy(new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes f) {
+                return f.getName() == "m_listeners";
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> clazz) {
+                return false;
+            }
+        });
+
+        builder.addDeserializationExclusionStrategy(new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes f) {
+                return f.getName() == "m_listeners";
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> clazz) {
+                return false;
+            }
+        });
 
         m_gson = builder.create();
     }

@@ -91,8 +91,20 @@ public class MainWindow extends JFrame implements IGameStateListener {
 			JOptionPane.showMessageDialog(this, "Votre score est de " + score + " / " + scoreMax, "Votre score", JOptionPane.INFORMATION_MESSAGE);
 		});
 
+		JMenuItem itemBestScore = new JMenuItem("Meilleur score");
+		itemBestScore.addActionListener(actionEvent -> {
+			IScoreCalculator scoreCalculator = new ScoreCalculator();
+			int scoreMax = scoreCalculator.getScoreMax(m_gameState.getPlateau());
+
+			if(m_gameState.getBestScore() == 0)
+				JOptionPane.showMessageDialog(this, "Aucun meilleur score n'a encore été enregistré", "Meilleur  score", JOptionPane.INFORMATION_MESSAGE);
+			else
+				JOptionPane.showMessageDialog(this, m_gameState.getBestPlayerName() + " : " + m_gameState.getBestScore() + " / " + scoreMax, "Meilleur score", JOptionPane.INFORMATION_MESSAGE);
+		});
+
 		menuJeu.add(itemNouvelleConfig);
 		menuJeu.add(itemCalculerScore);
+		menuJeu.add(itemBestScore);
 
 		menuBar.add(menuPartie);
 		menuBar.add(menuJeu);
@@ -127,6 +139,17 @@ public class MainWindow extends JFrame implements IGameStateListener {
 	}
 
 	public void saveGame() {
+		IScoreCalculator scoreCalculator = new ScoreCalculator();
+		int score = scoreCalculator.calculate(m_gameState.getPlateau());
+		if(m_gameState.getBestScore() < score) {
+			String playerName = JOptionPane.showInputDialog(this, "Entrez votre pseudo", "Nouveau meilleur score", JOptionPane.QUESTION_MESSAGE);
+			if(playerName == null)
+				return;
+
+			m_gameState.setBestPlayerName(playerName);
+			m_gameState.setBestScore(score);
+		}
+
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		chooser.showSaveDialog(this);
@@ -161,5 +184,17 @@ public class MainWindow extends JFrame implements IGameStateListener {
 	@Override
 	public void nbCoupsRestantsChanged(int nbCoupsRestants) {
 		updateStateLabel();
+
+		if(m_gameState.isFinished()) {
+			IScoreCalculator scoreCalculator = new ScoreCalculator();
+			int score = scoreCalculator.calculate(m_gameState.getPlateau());
+			int scoreMax = scoreCalculator.getScoreMax(m_gameState.getPlateau());
+
+			int choix = JOptionPane.showConfirmDialog(this, "Votre score est de " + score + " / " + scoreMax + "\nVoulez-vous sauvegarder votre partie?", "Fin de partie", JOptionPane.YES_NO_OPTION);
+			if(choix == JOptionPane.NO_OPTION)
+				return;
+
+			saveGame();
+		}
 	}
 }

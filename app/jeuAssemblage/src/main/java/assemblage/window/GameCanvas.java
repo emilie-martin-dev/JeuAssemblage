@@ -96,7 +96,7 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 
 	@Override
 	public void mouseClicked(MouseEvent me) {
-		if(isGameFinished())
+		if(m_state.isFinished())
 			return;
 
 		float cellSize = getCellSize();
@@ -120,7 +120,7 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 
 	@Override
 	public void mouseDragged(MouseEvent me) {
-		if(isGameFinished())
+		if(m_state.isFinished())
 			return;
 
 		float cellSize = getCellSize();
@@ -152,7 +152,7 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 	
 	@Override
 	public void mouseReleased(MouseEvent me) {
-		if(m_selectedPiece != null && !isGameFinished()) {
+		if(m_selectedPiece != null && !m_state.isFinished()) {
 			m_state.decrementNbCoupsRestants();
 		}
 
@@ -197,6 +197,7 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 			m_state.getPlateau().removeListener(this);
 			m_state.removeListener(this);
 		}
+
 		m_state = state;
 		m_state.getPlateau().addListener(this);
 		m_state.addListener(this);
@@ -204,13 +205,11 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 		redraw();
 	}
 
-	public boolean isGameFinished() {
-		return m_state.getNbCoupsRestants() <= 0;
-	}
-
 	@Override
 	public void stateReset() {
 		redraw();
+
+		m_state.getPlateau().addListener(this);
 	}
 
 	@Override

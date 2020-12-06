@@ -18,12 +18,17 @@ public class GameState {
     private Plateau m_plateau;
     private Plateau m_plateauDepart;
 
+    private String m_bestPlayerName;
+    private int m_bestScore;
+
     private int m_nbCoupsRestants;
 
     public GameState(GameRule rules, Plateau plateau) {
         m_rules = rules;
         m_plateauDepart = plateau;
         m_plateau = copyPlateauDepart();
+
+        m_bestScore = 0;
 
         m_nbCoupsRestants = rules.getNbCoupsMax();
 
@@ -56,7 +61,14 @@ public class GameState {
         fireNbCoupsRestantsChanged();
     }
 
+    public boolean isFinished() {
+        return m_nbCoupsRestants <= 0;
+    }
+
     public void addListener(IGameStateListener listener) {
+        if(m_listeners == null)
+            m_listeners = new ArrayList<>();
+
         m_listeners.add(listener);
     }
 
@@ -94,5 +106,21 @@ public class GameState {
 
     public int getNbCoupsRestants() {
         return m_nbCoupsRestants;
+    }
+
+    public String getBestPlayerName() {
+        return m_bestPlayerName;
+    }
+
+    public void setBestPlayerName(String bestPlayerName) {
+        m_bestPlayerName = bestPlayerName;
+    }
+
+    public int getBestScore() {
+        return m_bestScore;
+    }
+
+    public void setBestScore(int bestScore) {
+        m_bestScore = bestScore;
     }
 }
