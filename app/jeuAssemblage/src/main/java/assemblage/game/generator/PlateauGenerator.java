@@ -18,7 +18,7 @@ public class PlateauGenerator implements IPlateauGenerator {
 
         Plateau plateau = new Plateau(width, height);
 
-        for(int i = 0 ; i < (width * height) / 20 ; i++) {
+        for(int i = 0 ; i < (width * height) / 30 ; i++) {
             int choixPiece = rand.nextInt(3);
 
             int w = rand.nextInt(7-2);

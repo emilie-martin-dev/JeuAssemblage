@@ -14,8 +14,7 @@ import assemblage.game.score.ScoreCalculator;
 import assemblage.io.IGameIO;
 import assemblage.io.gson.GameIOGson;
 import assemblage.observer.IGameStateListener;
-import piece_puzzle.model.piece.PieceL;
-import piece_puzzle.model.piece.PieceT;
+import assemblage.window.dialog.NewGameDialog;
 import piece_puzzle.model.Plateau;
 
 public class MainWindow extends JFrame implements IGameStateListener {
@@ -32,7 +31,7 @@ public class MainWindow extends JFrame implements IGameStateListener {
 		m_stateLabel.setBorder(new EmptyBorder(16, 16, 16, 16));
 		m_canvas = new GameCanvas(null);
 
-		newGame();
+		newGame(20, 20, 50);
 		
 		this.setTitle("Assemblage");
 		this.setLayout(new BorderLayout());
@@ -115,11 +114,18 @@ public class MainWindow extends JFrame implements IGameStateListener {
 	}
 
 	public void newGame() {
+		NewGameDialog newGameDialog = new NewGameDialog(this);
+		if(!newGameDialog.isValidated())
+			return;
+
+		newGame(newGameDialog.getSelectedWidth(), newGameDialog.getSelectedHeight(), newGameDialog.getSelectedNbCoupsMax());
+	}
+
+	public void newGame(int width, int height, int nbCoupsMax) {
 		IPlateauGenerator plateauGenerator = new PlateauGenerator();
-		Plateau p = plateauGenerator.generate(20, 20);
+		Plateau p = plateauGenerator.generate(width, height);
 
-		m_gameState = new GameState(new GameRule(10), p);
-
+		m_gameState = new GameState(new GameRule(nbCoupsMax), p);
 
 		setGameState(m_gameState);
 	}
