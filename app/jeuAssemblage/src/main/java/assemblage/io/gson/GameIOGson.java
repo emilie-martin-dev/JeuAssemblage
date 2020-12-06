@@ -7,7 +7,7 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import piece_puzzle.model.AbstractPiece;
+import piece_puzzle.model.piece.AbstractPiece;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;

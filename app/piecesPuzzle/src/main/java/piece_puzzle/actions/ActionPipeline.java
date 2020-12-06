@@ -21,6 +21,7 @@ public class ActionPipeline implements IAction {
 	
 	@Override
 	public boolean isValid() {
+		// On vérifie les actions suite a suite
 		for(IAction a : m_actions) {
 			if(!a.isValid())
 				return false;
@@ -31,6 +32,7 @@ public class ActionPipeline implements IAction {
 
 	@Override
 	public void apply() {
+		// On applique les actions suite a suite
 		for(IAction a : m_actions) {
 			a.apply();
 		}

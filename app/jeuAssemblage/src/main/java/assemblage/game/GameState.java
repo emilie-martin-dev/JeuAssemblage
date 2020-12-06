@@ -4,7 +4,7 @@ import assemblage.io.gson.serializer.CustomAdapter;
 import assemblage.observer.IGameStateListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import piece_puzzle.model.AbstractPiece;
+import piece_puzzle.model.piece.AbstractPiece;
 import piece_puzzle.model.Plateau;
 
 import java.util.ArrayList;

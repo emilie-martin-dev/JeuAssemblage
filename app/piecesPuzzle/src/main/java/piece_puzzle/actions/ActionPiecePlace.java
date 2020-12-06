@@ -1,7 +1,7 @@
 package piece_puzzle.actions;
 
 import piece_puzzle.model.Plateau;
-import piece_puzzle.model.AbstractPiece;
+import piece_puzzle.model.piece.AbstractPiece;
 
 /**
  * Place une pièce sur le plateau

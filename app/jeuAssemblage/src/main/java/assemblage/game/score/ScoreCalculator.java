@@ -1,6 +1,6 @@
 package assemblage.game.score;
 
-import piece_puzzle.model.AbstractPiece;
+import piece_puzzle.model.piece.AbstractPiece;
 import piece_puzzle.model.Plateau;
 
 public class ScoreCalculator implements IScoreCalculator {

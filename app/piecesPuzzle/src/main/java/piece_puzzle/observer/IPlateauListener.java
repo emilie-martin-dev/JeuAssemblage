@@ -1,6 +1,6 @@
 package piece_puzzle.observer;
 
-import piece_puzzle.model.AbstractPiece;
+import piece_puzzle.model.piece.AbstractPiece;
 
 /**
  * Listener pour le plateau

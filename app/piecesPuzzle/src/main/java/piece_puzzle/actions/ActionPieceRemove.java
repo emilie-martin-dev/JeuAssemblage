@@ -1,6 +1,6 @@
 package piece_puzzle.actions;
 
-import piece_puzzle.model.AbstractPiece;
+import piece_puzzle.model.piece.AbstractPiece;
 import piece_puzzle.model.Plateau;
 
 /**
@@ -24,6 +24,7 @@ public class ActionPieceRemove implements IAction {
 	
 	@Override
 	public boolean isValid() {
+		// On peut toujours supprimer une pièce
 		return true;
 	}
 

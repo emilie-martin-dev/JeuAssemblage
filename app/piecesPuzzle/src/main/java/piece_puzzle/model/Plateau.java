@@ -3,6 +3,7 @@ package piece_puzzle.model;
 import java.util.ArrayList;
 import java.util.List;
 import piece_puzzle.actions.ActionPiecePlace;
+import piece_puzzle.model.piece.AbstractPiece;
 import piece_puzzle.observer.IPlateauListener;
 
 /**

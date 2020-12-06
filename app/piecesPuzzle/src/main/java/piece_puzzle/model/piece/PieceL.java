@@ -1,39 +1,43 @@
-package piece_puzzle.model;
+package piece_puzzle.model.piece;
 
 /**
- * Pièce en forme de rectangle
+ * Pièce en L
  */
-public class PieceRectangle extends AbstractPiece {
+public class PieceL extends AbstractPiece {
 
 	/**
-	 * Pièce en forme de rectangle
+	 * Pièce en L
 	 * @param w Largeur
 	 * @param h Hauteur
 	 */
-	public PieceRectangle(int w, int h) {
+	public PieceL(int w, int h) {
 		super(w, h);
 	}
 
 	/**
-	 * Pièce en forme de rectangle
+	 * Pièce en L
 	 * @param w Largeur
 	 * @param h Hauteur
 	 * @param x Position x
 	 * @param y Position y
 	 */
-	public PieceRectangle(int w, int h, int x, int y) {
+	public PieceL(int w, int h, int x, int y) {
 		super(w, h, x, y);
 	}	
 
 	@Override
 	protected boolean[] generatePiece(int w, int h) {
 		boolean[] blocs = new boolean[w*h];
-		
+
+		// Barre horizontale
 		for(int x = 0 ; x < w ; x++) {
-			for(int y = 0 ; y < h ; y++) {
-				blocs[x + y * w] = true;
-			}
-		}			
+			blocs[x + w * (h-1)] = true;
+		}
+
+		// Barre verticale
+		for(int y = 0 ; y < h ; y++) {
+			blocs[w * y] = true;
+		}
 		
 		return blocs;
 	}

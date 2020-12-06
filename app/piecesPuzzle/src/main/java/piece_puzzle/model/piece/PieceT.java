@@ -1,4 +1,4 @@
-package piece_puzzle.model;
+package piece_puzzle.model.piece;
 
 /**
  * Pièce du tétris en forme de T
@@ -28,11 +28,13 @@ public class PieceT extends AbstractPiece {
 	@Override
 	protected boolean[] generatePiece(int w, int h) {
 		boolean[] blocs = new boolean[w*h];
-		
+
+		// Barre horizontale
 		for(int x = 0 ; x < w ; x++) {
 			blocs[x] = true;
 		}
-		
+
+		// Barre verticale
 		for(int y = 1 ; y < h ; y++) {
 			blocs[w / 2 + y * w] = true;
 			

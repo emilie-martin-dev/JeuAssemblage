@@ -12,8 +12,8 @@ import assemblage.game.score.ScoreCalculator;
 import assemblage.io.IGameIO;
 import assemblage.io.gson.GameIOGson;
 import assemblage.observer.IGameStateListener;
-import piece_puzzle.model.PieceL;
-import piece_puzzle.model.PieceT;
+import piece_puzzle.model.piece.PieceL;
+import piece_puzzle.model.piece.PieceT;
 import piece_puzzle.model.Plateau;
 
 public class MainWindow extends JFrame implements IGameStateListener {

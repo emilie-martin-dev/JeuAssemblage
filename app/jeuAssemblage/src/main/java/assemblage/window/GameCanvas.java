@@ -11,8 +11,7 @@ import assemblage.game.GameState;
 import assemblage.observer.IGameStateListener;
 import piece_puzzle.actions.ActionPieceMove;
 import piece_puzzle.actions.ActionPieceRotate;
-import piece_puzzle.model.AbstractPiece;
-import piece_puzzle.model.Plateau;
+import piece_puzzle.model.piece.AbstractPiece;
 import piece_puzzle.observer.IPlateauListener;
 
 public class GameCanvas extends JPanel implements MouseListener, MouseMotionListener, IPlateauListener, IGameStateListener {

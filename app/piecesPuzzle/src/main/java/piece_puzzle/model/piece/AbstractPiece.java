@@ -1,5 +1,6 @@
-package piece_puzzle.model;
+package piece_puzzle.model.piece;
 
+import piece_puzzle.model.IEnsembleBlocs;
 import piece_puzzle.utils.Position;
 
 /**
