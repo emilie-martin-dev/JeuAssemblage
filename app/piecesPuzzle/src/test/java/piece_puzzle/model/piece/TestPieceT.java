@@ -1,4 +1,4 @@
-package piece_puzzle.model;
+package piece_puzzle.model.piece;
 
 import org.junit.Assert;
 import org.junit.Test;

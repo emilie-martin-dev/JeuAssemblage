@@ -19,32 +19,24 @@ public class GameIOGson implements IGameIO {
     private Gson m_gson;
 
     public GameIOGson() {
+        ExclusionStrategy exclusionStrategy = new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes f) {
+                return f.getName() == "m_listeners";
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> clazz) {
+                return false;
+            }
+        };
+
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(AbstractPiece.class, new CustomAdapter<>());
         builder.setPrettyPrinting();
-        builder.addSerializationExclusionStrategy(new ExclusionStrategy() {
-            @Override
-            public boolean shouldSkipField(FieldAttributes f) {
-                return f.getName() == "m_listeners";
-            }
+        builder.addSerializationExclusionStrategy(exclusionStrategy);
 
-            @Override
-            public boolean shouldSkipClass(Class<?> clazz) {
-                return false;
-            }
-        });
-
-        builder.addDeserializationExclusionStrategy(new ExclusionStrategy() {
-            @Override
-            public boolean shouldSkipField(FieldAttributes f) {
-                return f.getName() == "m_listeners";
-            }
-
-            @Override
-            public boolean shouldSkipClass(Class<?> clazz) {
-                return false;
-            }
-        });
+        builder.addDeserializationExclusionStrategy(exclusionStrategy);
 
         m_gson = builder.create();
     }

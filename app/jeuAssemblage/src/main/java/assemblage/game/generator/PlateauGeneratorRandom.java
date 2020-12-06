@@ -10,7 +10,7 @@ import piece_puzzle.utils.Position;
 
 import java.util.Random;
 
-public class PlateauGenerator implements IPlateauGenerator {
+public class PlateauGeneratorRandom implements IPlateauGenerator {
 
     @Override
     public Plateau generate(int width, int height) {

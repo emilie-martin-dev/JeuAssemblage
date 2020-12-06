@@ -8,9 +8,9 @@ import javax.swing.border.EmptyBorder;
 import assemblage.game.GameRule;
 import assemblage.game.GameState;
 import assemblage.game.generator.IPlateauGenerator;
-import assemblage.game.generator.PlateauGenerator;
+import assemblage.game.generator.PlateauGeneratorRandom;
 import assemblage.game.score.IScoreCalculator;
-import assemblage.game.score.ScoreCalculator;
+import assemblage.game.score.ScoreCalculatorSimple;
 import assemblage.io.IGameIO;
 import assemblage.io.gson.GameIOGson;
 import assemblage.observer.IGameStateListener;
@@ -85,7 +85,7 @@ public class MainWindow extends JFrame implements IGameStateListener {
 
 		JMenuItem itemCalculerScore = new JMenuItem("Calculer le score");
 		itemCalculerScore.addActionListener(actionEvent -> {
-			IScoreCalculator scoreCalculator = new ScoreCalculator();
+			IScoreCalculator scoreCalculator = new ScoreCalculatorSimple();
 			int score = scoreCalculator.calculate(m_gameState.getPlateau());
 			int scoreMax = scoreCalculator.getScoreMax(m_gameState.getPlateau());
 
@@ -94,7 +94,7 @@ public class MainWindow extends JFrame implements IGameStateListener {
 
 		JMenuItem itemBestScore = new JMenuItem("Meilleur score");
 		itemBestScore.addActionListener(actionEvent -> {
-			IScoreCalculator scoreCalculator = new ScoreCalculator();
+			IScoreCalculator scoreCalculator = new ScoreCalculatorSimple();
 			int scoreMax = scoreCalculator.getScoreMax(m_gameState.getPlateau());
 
 			if(m_gameState.getBestScore() == 0)
@@ -122,7 +122,7 @@ public class MainWindow extends JFrame implements IGameStateListener {
 	}
 
 	public void newGame(int width, int height, int nbCoupsMax) {
-		IPlateauGenerator plateauGenerator = new PlateauGenerator();
+		IPlateauGenerator plateauGenerator = new PlateauGeneratorRandom();
 		Plateau p = plateauGenerator.generate(width, height);
 
 		m_gameState = new GameState(new GameRule(nbCoupsMax), p);
@@ -145,7 +145,7 @@ public class MainWindow extends JFrame implements IGameStateListener {
 	}
 
 	public void saveGame() {
-		IScoreCalculator scoreCalculator = new ScoreCalculator();
+		IScoreCalculator scoreCalculator = new ScoreCalculatorSimple();
 		int score = scoreCalculator.calculate(m_gameState.getPlateau());
 		if(m_gameState.getBestScore() < score) {
 			String playerName = JOptionPane.showInputDialog(this, "Entrez votre pseudo", "Nouveau meilleur score", JOptionPane.QUESTION_MESSAGE);
@@ -192,7 +192,7 @@ public class MainWindow extends JFrame implements IGameStateListener {
 		updateStateLabel();
 
 		if(m_gameState.isFinished()) {
-			IScoreCalculator scoreCalculator = new ScoreCalculator();
+			IScoreCalculator scoreCalculator = new ScoreCalculatorSimple();
 			int score = scoreCalculator.calculate(m_gameState.getPlateau());
 			int scoreMax = scoreCalculator.getScoreMax(m_gameState.getPlateau());
 

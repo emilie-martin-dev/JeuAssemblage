@@ -3,7 +3,7 @@ package assemblage.game.score;
 import piece_puzzle.model.piece.AbstractPiece;
 import piece_puzzle.model.Plateau;
 
-public class ScoreCalculator implements IScoreCalculator {
+public class ScoreCalculatorSimple implements IScoreCalculator {
 
     @Override
     public int calculate(Plateau plateau) {
