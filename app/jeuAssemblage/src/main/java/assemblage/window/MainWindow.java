@@ -7,6 +7,8 @@ import javax.swing.border.EmptyBorder;
 
 import assemblage.game.GameRule;
 import assemblage.game.GameState;
+import assemblage.game.generator.IPlateauGenerator;
+import assemblage.game.generator.PlateauGenerator;
 import assemblage.game.score.IScoreCalculator;
 import assemblage.game.score.ScoreCalculator;
 import assemblage.io.IGameIO;
@@ -113,10 +115,8 @@ public class MainWindow extends JFrame implements IGameStateListener {
 	}
 
 	public void newGame() {
-		Plateau p = new Plateau(20, 20);
-
-		p.addPiece(new PieceL(3, 5));
-		p.addPiece(new PieceT(5, 3, 5, 5));
+		IPlateauGenerator plateauGenerator = new PlateauGenerator();
+		Plateau p = plateauGenerator.generate(20, 20);
 
 		m_gameState = new GameState(new GameRule(10), p);
 

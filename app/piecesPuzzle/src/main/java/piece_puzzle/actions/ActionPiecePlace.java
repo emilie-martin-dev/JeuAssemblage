@@ -33,12 +33,19 @@ public class ActionPiecePlace implements IAction {
 	
 	@Override
 	public boolean isValid() {
+		int pieceX = m_piece.getPosition().getX();
+		int pieceY = m_piece.getPosition().getY();
+
+		if(pieceX < 0 || pieceX + m_piece.getWidth() > m_plateau.getWidth()
+			|| pieceY < 0 || pieceY + m_piece.getHeight() > m_plateau.getHeight())
+			return false;
+
 		for(int x = 0 ; x < m_piece.getWidth() ; x++) {
 			for(int y = 0 ; y < m_piece.getHeight(); y++) {
 				if(!m_piece.isCaseFilledAt(x, y))
 					continue;
 
-				if(m_plateau.isCaseFilledAt(m_piece.getPosition().getX() + x, m_piece.getPosition().getY() + y)) {
+				if(m_plateau.isCaseFilledAt(pieceX + x, pieceY + y)) {
 					return false;
 				}
 			}
