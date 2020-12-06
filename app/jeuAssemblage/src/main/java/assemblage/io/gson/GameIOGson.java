@@ -2,7 +2,7 @@ package assemblage.io.gson;
 
 import assemblage.game.GameState;
 import assemblage.io.IGameIO;
-import assemblage.io.gson.serializer.CustomAdapter;
+import assemblage.io.gson.serializer.GameStateAdapter;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -14,15 +14,21 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Import et export d'une partie par GSON
+ */
 public class GameIOGson implements IGameIO {
 
+    /**
+     * L'instance de GSON
+     */
     private Gson m_gson;
 
     public GameIOGson() {
         ExclusionStrategy exclusionStrategy = new ExclusionStrategy() {
             @Override
             public boolean shouldSkipField(FieldAttributes f) {
-                return f.getName() == "m_listeners";
+                return f.getName().equals("m_listeners");
             }
 
             @Override
@@ -32,7 +38,7 @@ public class GameIOGson implements IGameIO {
         };
 
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(AbstractPiece.class, new CustomAdapter<>());
+        builder.registerTypeAdapter(AbstractPiece.class, new GameStateAdapter<>());
         builder.setPrettyPrinting();
         builder.addSerializationExclusionStrategy(exclusionStrategy);
 

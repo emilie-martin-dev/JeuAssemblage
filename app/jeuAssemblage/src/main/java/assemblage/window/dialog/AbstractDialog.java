@@ -74,6 +74,9 @@ public abstract class AbstractDialog extends JDialog {
         return controlPanel;
     }
 
+    /**
+     * Confirme que la boite de dialogue a un contenu correct
+     */
     protected void validateDialog() {
         m_validateDialog = true;
     }

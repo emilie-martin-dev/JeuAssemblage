@@ -3,6 +3,9 @@ package assemblage.game.score;
 import piece_puzzle.model.piece.AbstractPiece;
 import piece_puzzle.model.Plateau;
 
+/**
+ * Méthode de calcule simple qui retire l'aire prise par toutes les pièces à l'aire maximum de la grille - l'aire minimum que prennent les pièces. Le défaut de cette classe est qu'il n'est pas forcément possible d'obtenir le score maximum car les pièces peuvent ne pas pouvoir former un rectangle complet
+ */
 public class ScoreCalculatorSimple implements IScoreCalculator {
 
     @Override
@@ -36,7 +39,18 @@ public class ScoreCalculatorSimple implements IScoreCalculator {
 
     @Override
     public int getScoreMax(Plateau plateau) {
-        return plateau.getWidth() * plateau.getHeight();
+        // Calcule l'aire minimum que peuvent prendre les pièces du jeu
+        int sommePiece = 0;
+
+        for(AbstractPiece piece : plateau.getPieces()) {
+            for(boolean v : piece.getBlocsPosition()) {
+                if(v) {
+                    sommePiece++;
+                }
+            }
+        }
+
+        return plateau.getWidth() * plateau.getHeight() - sommePiece;
     }
 
 }

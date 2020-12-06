@@ -17,19 +17,35 @@ import assemblage.observer.IGameStateListener;
 import assemblage.window.dialog.NewGameDialog;
 import piece_puzzle.model.Plateau;
 
+/**
+ * Fenêtre principal de l'application
+ */
 public class MainWindow extends JFrame implements IGameStateListener {
 
+	/**
+	 * Classe pour charger / sauvegarder une partie
+	 */
 	private IGameIO m_gameIO;
 
+	/**
+	 * Le composant sur lequel le jeu s'affiche
+	 */
 	private GameCanvas m_canvas;
+	/**
+	 * Le label qui se charge d'afficher l'etat du jeu (ex : coups restants)
+	 */
 	private JLabel m_stateLabel;
 
+	/**
+	 * L'état du jeu
+	 */
 	private GameState m_gameState;
 	
 	public MainWindow() {
 		m_stateLabel = new JLabel();
 		m_stateLabel.setBorder(new EmptyBorder(16, 16, 16, 16));
 		m_canvas = new GameCanvas(null);
+		m_gameIO = new GameIOGson();
 
 		newGame(20, 20, 50);
 		
@@ -46,9 +62,6 @@ public class MainWindow extends JFrame implements IGameStateListener {
 		this.setLocationRelativeTo(null);
 		
 		this.setVisible(true);
-
-		m_gameIO = new GameIOGson();
-
 		updateStateLabel();
 	}
 	
@@ -113,6 +126,9 @@ public class MainWindow extends JFrame implements IGameStateListener {
 		this.setJMenuBar(menuBar);
 	}
 
+	/**
+	 * Démarre une partie en affichant une boite de dialogue
+	 */
 	public void newGame() {
 		NewGameDialog newGameDialog = new NewGameDialog(this);
 		if(!newGameDialog.isValidated())
@@ -121,6 +137,12 @@ public class MainWindow extends JFrame implements IGameStateListener {
 		newGame(newGameDialog.getSelectedWidth(), newGameDialog.getSelectedHeight(), newGameDialog.getSelectedNbCoupsMax());
 	}
 
+	/**
+	 * Démarre une partie selon les paramètre fournis
+	 * @param width Largeur du plateau
+	 * @param height Hauteur du plateau
+	 * @param nbCoupsMax Nombre de coups maximum pour la partie
+	 */
 	public void newGame(int width, int height, int nbCoupsMax) {
 		IPlateauGenerator plateauGenerator = new PlateauGeneratorRandom();
 		Plateau p = plateauGenerator.generate(width, height);
@@ -130,6 +152,9 @@ public class MainWindow extends JFrame implements IGameStateListener {
 		setGameState(m_gameState);
 	}
 
+	/**
+	 * Chargement d'une partie
+	 */
 	public void openGame() {
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -144,7 +169,11 @@ public class MainWindow extends JFrame implements IGameStateListener {
 		setGameState(save);
 	}
 
+	/**
+	 * Sauvegarde de la partie en cours
+	 */
 	public void saveGame() {
+		// On vérifie s'il s'agit d'un nouveau meilleur score
 		IScoreCalculator scoreCalculator = new ScoreCalculatorSimple();
 		int score = scoreCalculator.calculate(m_gameState.getPlateau());
 		if(m_gameState.getBestScore() < score) {
@@ -156,6 +185,7 @@ public class MainWindow extends JFrame implements IGameStateListener {
 			m_gameState.setBestScore(score);
 		}
 
+		// On choisit l'emplacement de la sauvegarde
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		chooser.showSaveDialog(this);
@@ -167,10 +197,17 @@ public class MainWindow extends JFrame implements IGameStateListener {
 		m_gameIO.saveGameState(m_gameState, selectedFile.getPath());
 	}
 
+	/**
+	 * Met à jour les informations sur la partie en cours
+	 */
 	public void updateStateLabel() {
 		m_stateLabel.setText("Coups restants : " + m_gameState.getNbCoupsRestants() + "\n");
 	}
 
+	/**
+	 * Change l'etat du jeu en cours
+	 * @param state L'etat du jeu en cours
+	 */
 	public void setGameState(GameState state) {
 		if(m_gameState != null)
 			m_gameState.removeListener(this);

@@ -2,51 +2,36 @@ package assemblage.game.generator;
 
 import piece_puzzle.actions.ActionPiecePlace;
 import piece_puzzle.model.Plateau;
-import piece_puzzle.model.piece.AbstractPiece;
-import piece_puzzle.model.piece.PieceL;
-import piece_puzzle.model.piece.PieceRectangle;
-import piece_puzzle.model.piece.PieceT;
+import piece_puzzle.model.piece.*;
 import piece_puzzle.utils.Position;
 
 import java.util.Random;
 
 public class PlateauGeneratorRandom implements IPlateauGenerator {
 
+    /**
+     * Le nombre d'essais max pour placer une pièce
+     */
+    private static final int NB_ESSAIS_MAX = 10;
+    /**
+     * Le facteur par lequel on divise la taille de la grille. Plus il est haut, moins il y a de pièce
+     */
+    private static final int FACTOR_PIECE = 30;
+
     @Override
     public Plateau generate(int width, int height) {
-        Random rand = new Random();
-
         Plateau plateau = new Plateau(width, height);
 
-        for(int i = 0 ; i < (width * height) / 30 ; i++) {
-            int choixPiece = rand.nextInt(3);
+        Random rand = new Random();
 
-            int w = rand.nextInt(7-2);
-            int h = rand.nextInt(7-2);
-            int rotation = rand.nextInt(4);
-
-            AbstractPiece piece = null;
-            switch (choixPiece) {
-                case 0:
-                    piece = new PieceL(w+2, h+2);
-                    break;
-
-                case 1:
-                    piece = new PieceRectangle(w+2, h+2);
-                    break;
-
-                case 2:
-                    piece = new PieceT(w+2, h+2);
-                    break;
-            }
-
-            for(int r = 0 ; r < rotation ; r++) {
-                piece.rotate();
-            }
+        // On génère (width * height) / FACTOR_PIECE pieces
+        for(int i = 0 ; i < (width * height) / FACTOR_PIECE ; i++) {
+            AbstractPiece piece = PieceFactory.generatePiece();
 
             boolean isPlaced = false;
-            int j = 0;
-            while(!isPlaced && j < 10) {
+            int essais = 0;
+            // Tant que la pièce n'est pas placée et qu'on a fait moins de NB_ESSAIS_MAX essais, on tire une position au hasard et on tente de la placer
+            while(!isPlaced && essais < NB_ESSAIS_MAX) {
                 int x = rand.nextInt(width);
                 int y = rand.nextInt(height);
 
@@ -58,7 +43,7 @@ public class PlateauGeneratorRandom implements IPlateauGenerator {
                     isPlaced = true;
                 }
 
-                j++;
+                essais++;
             }
         }
 

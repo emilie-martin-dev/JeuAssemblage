@@ -15,13 +15,28 @@ import piece_puzzle.model.piece.AbstractPiece;
 import piece_puzzle.observer.IPlateauListener;
 
 public class GameCanvas extends JPanel implements MouseListener, MouseMotionListener, IPlateauListener, IGameStateListener {
-	
+
+	/**
+	 * Les couleurs que prennent les pièces
+	 */
 	private static final Color[] COLORS = {Color.LIGHT_GRAY, Color.RED, Color.PINK, Color.ORANGE, Color.GRAY, Color.YELLOW, Color.GREEN, Color.MAGENTA, Color.DARK_GRAY, Color.CYAN, Color.BLUE};
-	
+
+	/**
+	 * L'état du jeu
+	 */
 	private GameState m_state;
+	/**
+	 * La pièce actuellement sélectionnée
+	 */
 	private AbstractPiece m_selectedPiece;
 
+	/**
+	 * Le décalage x sur la pièce lors de la saisie
+	 */
 	private int offsetX;
+	/**
+	 * Le décalage y sur la pièce lors de la saisie
+	 */
 	private int offsetY;
 	
 	public GameCanvas(GameState state) {
@@ -55,7 +70,11 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 			g.drawLine(0, (int)(y * cellSize), (int)(m_state.getPlateau().getWidth() * cellSize), (int)(y * cellSize));
 		}
 	}
-	
+
+	/**
+	 * Dessine les pièces
+	 * @param g L'objet avec lequel on dessine
+	 */
 	protected void drawPieces(Graphics g) {
 		float cellSize = getCellSize();
 
@@ -88,6 +107,9 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 		drawGrid(g);
 	}
 
+	/**
+	 * On actualise l'affichage du JPanel
+	 */
 	public void redraw() {
 		revalidate();
 		repaint();
@@ -188,6 +210,10 @@ public class GameCanvas extends JPanel implements MouseListener, MouseMotionList
 		redraw();
 	}
 
+	/**
+	 * On change l'etat du jeu en cours
+	 * @param state L'etat du jeu en cours
+	 */
 	public void setGameState(GameState state) {
 		if(state == null)
 			return;

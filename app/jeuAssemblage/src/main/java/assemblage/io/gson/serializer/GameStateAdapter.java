@@ -5,7 +5,11 @@ import com.google.gson.*;
 import java.lang.reflect.Type;
 
 // cf : https://stackoverflow.com/questions/16000163/using-gson-and-abstract-classes#16018710
-public class CustomAdapter<T> implements JsonSerializer<T>, JsonDeserializer<T> {
+
+/**
+ * Adapater pour l'export et l'import de partie
+ */
+public class GameStateAdapter<T> implements JsonSerializer<T>, JsonDeserializer<T> {
 
     @Override
     public final JsonElement serialize(final T object, final Type interfaceType, final JsonSerializationContext context) {

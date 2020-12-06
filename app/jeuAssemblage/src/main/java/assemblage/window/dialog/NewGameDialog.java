@@ -4,14 +4,35 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * Boite de dialiogue pour sélectionner les paramètres de la nouvelle partie
+ */
 public class NewGameDialog extends AbstractDialog {
 
+    /**
+     * Le champs de la largeur du plateau
+     */
     private JTextField m_widthTextField;
+    /**
+     * Le champs de la hauteur du plateau
+     */
     private JTextField m_heightTextField;
+    /**
+     * Le nombre de coups max
+     */
     private JTextField m_nbCoupsMaxTextField;
 
+    /**
+     * La valeur de la largeur
+     */
     private Integer m_widthSelected;
+    /**
+     * La valeur de la hauteur
+     */
     private Integer m_heightSelected;
+    /**
+     * Le nombre de coups max
+     */
     private Integer m_nbCoupsMaxSelected;
 
     public NewGameDialog(JFrame parent) {
@@ -57,7 +78,7 @@ public class NewGameDialog extends AbstractDialog {
         c.gridy = 2;
         mainContent.add(nbCoupsMaxLabel, c);
 
-        //Création du champ de saisie de la hauteur
+        //Création du champ de saisie du nombre de coups max
         m_nbCoupsMaxTextField = new JTextField();
         m_nbCoupsMaxTextField.setPreferredSize(new Dimension(200, 25));
         c.gridx = 1;
@@ -103,7 +124,7 @@ public class NewGameDialog extends AbstractDialog {
 
     /**
      * Récupère la largeur sélectionnée par l'utilisateur
-     * @return la largeur séléctionée dans la boite de dialogue, null si la boite de dialogue n'a pas été validée
+     * @return la largeur séléctionée dans la boite de dialogue
      */
     public Integer getSelectedWidth() {
         return this.m_widthSelected;
@@ -111,7 +132,7 @@ public class NewGameDialog extends AbstractDialog {
 
     /**
      * Récupère la hauteur sélectionnée par l'utilisateur
-     * @return la hauteur séléctionée dans la boite de dialogue, null si la boite de dialogue n'a pas été validée
+     * @return la hauteur séléctionée dans la boite de dialogue
      */
     public Integer getSelectedHeight() {
         return this.m_heightSelected;
@@ -119,7 +140,7 @@ public class NewGameDialog extends AbstractDialog {
 
     /**
      * Récupère le nombre de coups max sélectionnée par l'utilisateur
-     * @return le nombre de coups max séléctionée dans la boite de dialogue, null si la boite de dialogue n'a pas été validée
+     * @return le nombre de coups max séléctionée dans la boite de dialogue
      */
     public Integer getSelectedNbCoupsMax() {
         return this.m_nbCoupsMaxSelected;
