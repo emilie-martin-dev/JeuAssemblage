@@ -1,11 +1,26 @@
 package piece_puzzle.model;
 
+/**
+ * Pièce du tétris en forme de T
+ */
 public class PieceT extends AbstractPiece {
-	
+
+	/**
+	 * Pièce en T
+	 * @param w Largeur
+	 * @param h Hauteur
+	 */
 	public PieceT(int w, int h) {
 		super(w, h);
 	}
 
+	/**
+	 * Piece en T
+	 * @param w Largueur
+	 * @param h Hauteur
+	 * @param x Position x
+	 * @param y Position y
+	 */
 	public PieceT(int w, int h, int x, int y) {
 		super(w, h, x, y);
 	}	

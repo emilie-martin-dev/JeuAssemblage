@@ -1,11 +1,26 @@
 package piece_puzzle.model;
 
+/**
+ * Pièce en forme de rectangle
+ */
 public class PieceRectangle extends AbstractPiece {
-	
+
+	/**
+	 * Pièce en forme de rectangle
+	 * @param w Largeur
+	 * @param h Hauteur
+	 */
 	public PieceRectangle(int w, int h) {
 		super(w, h);
-	}	
-	
+	}
+
+	/**
+	 * Pièce en forme de rectangle
+	 * @param w Largeur
+	 * @param h Hauteur
+	 * @param x Position x
+	 * @param y Position y
+	 */
 	public PieceRectangle(int w, int h, int x, int y) {
 		super(w, h, x, y);
 	}	
