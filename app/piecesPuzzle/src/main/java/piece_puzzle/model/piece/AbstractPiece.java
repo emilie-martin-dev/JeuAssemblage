@@ -138,6 +138,10 @@ public abstract class AbstractPiece implements IEnsembleBlocs {
 		return m_cells;
 	}
 
+	public int getRotationCount() {
+		return m_rotationCount;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder buffer = new StringBuilder();
