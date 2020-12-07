@@ -1,0 +1,11 @@
+assemblage
+assemblage.game
+assemblage.game.ai
+assemblage.game.generator
+assemblage.game.score
+assemblage.io
+assemblage.io.gson
+assemblage.io.gson.serializer
+assemblage.observer
+assemblage.window
+assemblage.window.dialog

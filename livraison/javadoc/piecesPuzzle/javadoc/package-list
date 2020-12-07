@@ -1,0 +1,5 @@
+piece_puzzle.actions
+piece_puzzle.model
+piece_puzzle.model.piece
+piece_puzzle.observer
+piece_puzzle.utils
