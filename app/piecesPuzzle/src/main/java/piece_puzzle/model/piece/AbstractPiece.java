@@ -63,22 +63,18 @@ public abstract class AbstractPiece implements IEnsembleBlocs {
 				
 		int pieceX = x;
 		int pieceY = y;
-		
-		// cf : https://calcworkshop.com/wp-content/uploads/common-rotations-origin.png
+
 		for(int i = m_rotationCount ; i % 4 != 0 ; i--) {
 			int tmp = pieceX;
 			pieceX = pieceY;
 			pieceY = -tmp;
-			
-			pieceY += ((i % 2 == 0) ? m_width : m_height);	
+
+			// On remonte la pièce
+			pieceY += ((i % 2 == 0) ? m_width : m_height);
 			pieceY -= 1;
 		}
 
-		if(m_cells[pieceX + pieceY * m_width]) {
-			return true;
-		}
-		
-		return false;
+		return m_cells[pieceX + pieceY * m_width];
 	}
 
 	/**
