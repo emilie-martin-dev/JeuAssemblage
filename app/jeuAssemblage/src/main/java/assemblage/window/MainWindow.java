@@ -7,6 +7,7 @@ import javax.swing.border.EmptyBorder;
 
 import assemblage.game.GameRule;
 import assemblage.game.GameState;
+import assemblage.game.ai.Ai;
 import assemblage.game.generator.IPlateauGenerator;
 import assemblage.game.generator.PlateauGeneratorRandom;
 import assemblage.game.score.IScoreCalculator;
@@ -116,9 +117,16 @@ public class MainWindow extends JFrame implements IGameStateListener {
 				JOptionPane.showMessageDialog(this, m_gameState.getBestPlayerName() + " : " + m_gameState.getBestScore() + " / " + scoreMax, "Meilleur score", JOptionPane.INFORMATION_MESSAGE);
 		});
 
+		JMenuItem itemAi = new JMenuItem("Faire jouer cette grille à l'IA");
+		itemAi.addActionListener(actionEvent -> {
+			Ai ai = new Ai();
+			//setGameState(ai.compute(m_gameState));
+		});
+
 		menuJeu.add(itemNouvelleConfig);
 		menuJeu.add(itemCalculerScore);
 		menuJeu.add(itemBestScore);
+		menuJeu.add(itemAi);
 
 		menuBar.add(menuPartie);
 		menuBar.add(menuJeu);
